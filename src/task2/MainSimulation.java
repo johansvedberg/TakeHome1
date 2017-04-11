@@ -1,4 +1,4 @@
-package process_interaction;
+package task2;
 import java.util.*;
 import java.io.*;
 
