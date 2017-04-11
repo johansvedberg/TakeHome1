@@ -1,52 +1,30 @@
+
 package task2;
+
 import java.util.*;
 import java.io.*;
 
-//Denna klass �rver Global s� att man kan anv�nda time och signalnamnen utan punktnotation
-//It inherits Proc so that we can use time and the signal names without dot notation
+public class MainSimulation extends GlobalSimulation {
 
+	public static void main(String[] args) throws IOException {
+		Event actEvent;
+		State actState = new State(); // The state that shoud be used
+		// Some events must be put in the event list at the beginning
+		insertEvent(ARRIVAL1, 0);
+		insertEvent(MEASURE1, 5);
+		insertEvent(MEASURE2, 5);
 
-public class MainSimulation extends Global{
+		// The main simulation loop
+		while (time < 1000) {
+			actEvent = eventList.fetchEvent();
+			time = actEvent.eventTime;
+			actState.treatEvent(actEvent);
+		}
 
-    public static void main(String[] args) throws IOException {
+		// Printing the result of the simulation, in this case a mean value
+		System.out.println("Mean value in Q2: " + 1.0 * actState.accumulated2 / actState.noMeasurements2);
+		System.out.println("Chance of rejection: " + 1.0 * actState.noRejected / actState.accumulated1);
 
-    	//Signallistan startas och actSignal deklareras. actSignal �r den senast utplockade signalen i huvudloopen nedan.
-    	// The signal list is started and actSignal is declaree. actSignal is the latest signal that has been fetched from the 
-    	// signal list in the main loop below.
-
-    	Signal actSignal;
-    	new SignalList();
-
-    	//H�r nedan skapas de processinstanser som beh�vs och parametrar i dem ges v�rden.
-    	// Here process instances are created (two queues and one generator) and their parameters are given values. 
-
-    	QS Q1 = new QS();
-    	Q1.sendTo = null;
-
-    	Gen Generator = new Gen();
-    	Generator.lambda = 9; //Generator ska generera nio kunder per sekund  //Generator shall generate 9 customers per second
-    	Generator.sendTo = Q1; //De genererade kunderna ska skickas till k�systemet QS  // The generated customers shall be sent to Q1
-
-    	//H�r nedan skickas de f�rsta signalerna f�r att simuleringen ska komma ig�ng.
-    	//To start the simulation the first signals are put in the signal list
-
-    	SignalList.SendSignal(READY, Generator, time);
-    	SignalList.SendSignal(MEASURE, Q1, time);
-
-
-    	// Detta �r simuleringsloopen:
-    	// This is the main loop
-
-    	while (time < 100000){
-    		actSignal = SignalList.FetchSignal();
-    		time = actSignal.arrivalTime;
-    		actSignal.destination.TreatSignal(actSignal);
-    	}
-
-    	//Slutligen skrivs resultatet av simuleringen ut nedan:
-    	//Finally the result of the simulation is printed below:
-
-    	System.out.println("Mean number of customers in queuing system: " + 1.0*Q1.accumulated/Q1.noMeasurements);
-
-    }
+		actState.W.close();
+	}
 }

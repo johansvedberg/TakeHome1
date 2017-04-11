@@ -49,7 +49,6 @@ class State extends GlobalSimulation {
 	private void arrival1() {
 		if (numberInQueue1 == 0)
 			insertEvent(READY1, time + expDistribution(2.1));
-
 		insertEvent(ARRIVAL1, time + arrivalTime);
 		if (numberInQueue1 < 10) {
 			numberInQueue1++;
