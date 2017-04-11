@@ -12,7 +12,7 @@ class State extends GlobalSimulation {
 
 	Random slump = new Random(); // This is just a random number generator
 	SimpleFileWriter W = new SimpleFileWriter("number.m", false);
-	double arrivalTime = 5;
+	double arrivalTime = 1;
 
 	// The following method is called by the main program each time a new event
 	// has been fetched
