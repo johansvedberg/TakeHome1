@@ -8,6 +8,7 @@ class State extends GlobalSimulation {
 	// Here follows the state variables and other variables that might be needed
 	// e.g. for measurements
 	public int inBuffer = 0, nbrOfMeasurements = 0, nbrOfArrivals = 0;
+	public boolean bPrio, delayExponetial;
 
 	public LinkedList<Integer> buffer = new LinkedList<Integer>();
 
@@ -48,17 +49,22 @@ class State extends GlobalSimulation {
 		nbrOfArrivals++;
 		if (buffer.size() == 0)
 			insertEvent(READY, time + serviceA);
-
-		buffer.addLast(ARRIVALA);
+		if (bPrio) {
+			buffer.addLast(ARRIVALA);
+		} else {
+			buffer.addFirst(ARRIVALA);
+		}
 		insertEvent(ARRIVALA, time + expDistribution(arrivalTime));
-
 	}
 
 	private void arrivalB() {
 		if (buffer.size() == 0)
 			insertEvent(READY, time + serviceB);
-
-		buffer.addFirst(ARRIVALB);
+		if (bPrio) {
+			buffer.addFirst(ARRIVALB);
+		} else {
+			buffer.addLast(ARRIVALB);
+		}
 
 	}
 
@@ -67,7 +73,13 @@ class State extends GlobalSimulation {
 			int inQueue = buffer.poll();
 			if (inQueue == ARRIVALA) {
 				insertEvent(READY, time + serviceA);
-				insertEvent(ARRIVALB, time + serviceA + delay);
+				if (delayExponetial) {
+					insertEvent(ARRIVALB, time + serviceA + expDistribution(delay));
+
+				} else {
+					insertEvent(ARRIVALB, time + serviceA + delay);
+				}
+
 			} else if (inQueue == ARRIVALB) {
 				insertEvent(READY, time + serviceB);
 			}

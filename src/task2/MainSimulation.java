@@ -12,12 +12,13 @@ public class MainSimulation extends GlobalSimulation {
 		// Some events must be put in the event list at the beginning
 		insertEvent(ARRIVALA, 0);
 		insertEvent(MEASURE, 0);
+		actState.bPrio = false;
+		actState.delayExponetial = false;
 
 		// The main simulation loop
 		while (actState.nbrOfMeasurements < 1000) {
 			actEvent = eventList.fetchEvent();
 			time = actEvent.eventTime;
-		
 			actState.treatEvent(actEvent);
 		}
 
@@ -26,9 +27,10 @@ public class MainSimulation extends GlobalSimulation {
 		// / actState.noMeasurements2);
 		// System.out.println("Chance of rejection: " + 1.0 *
 		// actState.noRejected / actState.accumulated1);
+		System.out.println("Delay distribution is exponential: " + actState.delayExponetial);
+		System.out.println("B has priority: " + actState.bPrio);
 		System.out
 				.println("Mean number of jobs in the buffer: " + 1.0 * actState.inBuffer / actState.nbrOfMeasurements);
-		System.out.println(actState.nbrOfArrivals);
 		actState.W.close();
 	}
 }
