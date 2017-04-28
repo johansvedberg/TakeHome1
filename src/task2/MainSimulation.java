@@ -22,11 +22,6 @@ public class MainSimulation extends GlobalSimulation {
 			actState.treatEvent(actEvent);
 		}
 
-		// Printing the result of the simulation, in this case a mean value
-		// System.out.println("Mean value in Q2: " + 1.0 * actState.accumulated2
-		// / actState.noMeasurements2);
-		// System.out.println("Chance of rejection: " + 1.0 *
-		// actState.noRejected / actState.accumulated1);
 		System.out.println("Delay distribution is exponential: " + actState.delayExponetial);
 		System.out.println("B has priority: " + actState.bPrio);
 		System.out
