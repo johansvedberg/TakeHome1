@@ -10,11 +10,9 @@ public class Dispatcher extends Proc {
 	private ArrayList<QS> queues;
 	private Random randomGenerator;
 	private int currentIndex = 0;
-	Random slump = new Random();
 
 	public Dispatcher(ArrayList<QS> queues) {
 		this.queues = queues;
-
 		randomGenerator = new Random();
 
 	}
@@ -22,26 +20,20 @@ public class Dispatcher extends Proc {
 	@Override
 	public void TreatSignal(Signal x) {
 		switch (x.signalType) {
-
 		case ARRIVAL: {
-			numberInQueue++;
-			if (numberInQueue == 1) {
-				SignalList.SendSignal(READY, this, time);
-			}
+
+			SignalList.SendSignal(READY, this, time);
+
 		}
 			break;
 
 		case READY: {
 			// sendToRandom();
-			// sendToRoundRobin();
-			sendToSmallest();
-			numberInQueue--;
-			if (sendTo != null) {
-				SignalList.SendSignal(ARRIVAL, sendTo, time);
-			}
-			if (numberInQueue > 0) {
-				SignalList.SendSignal(READY, sendTo, time);
-			}
+			//sendToRoundRobin();
+			 sendToSmallest();
+
+			SignalList.SendSignal(ARRIVAL, sendTo, time);
+
 		}
 			break;
 
@@ -57,29 +49,28 @@ public class Dispatcher extends Proc {
 	}
 
 	private void sendToRoundRobin() {
-		if (currentIndex > 4) {
-			currentIndex = 0;
-		}
-
+		
 		QS queue = queues.get(currentIndex);
 		sendTo = queue;
 		currentIndex++;
+		currentIndex = currentIndex % 5;
+		
 
 	}
 
 	private void sendToSmallest() {
 
 		ArrayList<QS> smallest = new ArrayList<QS>();
-		int small = queues.get(0).numberInQueue;
+		double small = queues.get(0).numberInSystem;
 
 		for (QS qs : queues) {
-			if (qs.numberInQueue <= small) {
-				small = qs.numberInQueue;
+			if (qs.numberInSystem <= small) {
+				small = qs.numberInSystem;
 			}
 		}
 
 		for (QS qs2 : queues) {
-			if (qs2.numberInQueue == small) {
+			if (qs2.numberInSystem == small) {
 				smallest.add(qs2);
 
 			}

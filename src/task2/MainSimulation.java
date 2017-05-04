@@ -12,8 +12,8 @@ public class MainSimulation extends GlobalSimulation {
 		// Some events must be put in the event list at the beginning
 		insertEvent(ARRIVALA, 0);
 		insertEvent(MEASURE, 0);
-		actState.bPrio = false;
-		actState.delayExponetial = false;
+		actState.bPrio = true;
+		actState.delayExponetial = true;
 
 		// The main simulation loop
 		while (actState.nbrOfMeasurements < 1000) {

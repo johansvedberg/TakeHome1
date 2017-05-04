@@ -75,9 +75,11 @@ class State extends GlobalSimulation {
 				insertEvent(READY, time + serviceA);
 				if (delayExponetial) {
 					insertEvent(ARRIVALB, time + serviceA + expDistribution(delay));
+					System.out.println(expDistribution(delay));
 
 				} else {
 					insertEvent(ARRIVALB, time + serviceA + delay);
+					System.out.println(delay);
 				}
 
 			} else if (inQueue == ARRIVALB) {
