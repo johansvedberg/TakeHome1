@@ -28,7 +28,7 @@ public class Dispatcher extends Proc {
 			break;
 
 		case READY: {
-			// sendToRandom();
+			//sendToRandom();
 			//sendToRoundRobin();
 			 sendToSmallest();
 
@@ -49,12 +49,11 @@ public class Dispatcher extends Proc {
 	}
 
 	private void sendToRoundRobin() {
-		
+
 		QS queue = queues.get(currentIndex);
 		sendTo = queue;
 		currentIndex++;
-		currentIndex = currentIndex % 5;
-		
+		currentIndex %= 5;
 
 	}
 

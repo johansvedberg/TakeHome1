@@ -19,35 +19,34 @@ public class MainSimulation extends Global {
 		// Here process instances are created (two queues and one generator) and
 		// their parameters are given values.
 
-		QS Q1 = new QS();
-		QS Q2 = new QS();
-		QS Q3 = new QS();
-		QS Q4 = new QS();
-		QS Q5 = new QS();
+		QS Q1 = new QS("Q1");
+		QS Q2 = new QS("Q2");
+		QS Q3 = new QS("Q3");
+		QS Q4 = new QS("Q4");
+		QS Q5 = new QS("Q5");
 
 		ArrayList<QS> queues = new ArrayList<QS>();
 
 		queues.add(Q1);
 		queues.add(Q2);
 		queues.add(Q3);
-		queues.add(Q4); 
+		queues.add(Q4);
 		queues.add(Q5);
 
 		Dispatcher dispatcher = new Dispatcher(queues);
 		Gen Generator = new Gen(dispatcher);
-		double generalLambda = (1.0 / 0.12);
-		
+		double generalLambda = (1.0 / 2.00);
+
 		Generator.lambda = generalLambda;
-		
 
 		// To start the simulation the first signals are put in the signal list
 
-		SignalList.SendSignal(READY, Generator, 0);
 		SignalList.SendSignal(MEASURE, Q1, 0);
 		SignalList.SendSignal(MEASURE, Q2, 0);
 		SignalList.SendSignal(MEASURE, Q3, 0);
 		SignalList.SendSignal(MEASURE, Q4, 0);
 		SignalList.SendSignal(MEASURE, Q5, 0);
+		SignalList.SendSignal(READY, Generator, 0);
 
 		while (time < 100000) {
 			actSignal = SignalList.FetchSignal();
@@ -55,20 +54,19 @@ public class MainSimulation extends Global {
 			actSignal.destination.TreatSignal(actSignal);
 		}
 
-		double meanInSystem = ((1.0 * Q1.accumulated / Q1.noMeasurements) + (1.0 * Q2.accumulated / Q2.noMeasurements)
-				+ (1.0 * Q3.accumulated / Q3.noMeasurements) + (1.0 * Q4.accumulated / Q4.noMeasurements)
-				+ (1.0 * Q5.accumulated / Q5.noMeasurements));
+		double nbrInSystem = 0;
+		double timeInSystem = 0;
 
-		System.out.println("Mean number of customers in Q1: " + 1.0 * Q1.accumulated / Q1.noMeasurements);
-		// System.out.println("Mean time in Q1: " + (generalLambda / 5.0) / (1.0
-		// * Q1.accumulated / Q1.noMeasurements));
-		System.out.println("Mean number of customers in Q2: " + 1.0 * Q2.accumulated / Q2.noMeasurements);
-		System.out.println("Mean number of customers in Q3: " + 1.0 * Q3.accumulated / Q3.noMeasurements);
-		System.out.println("Mean number of customers in Q4: " + 1.0 * Q4.accumulated / Q4.noMeasurements);
-		System.out.println("Mean number of customers in Q5: " + 1.0 * Q5.accumulated / Q5.noMeasurements);
-		System.out.println("Mean number of customers in the system: " + meanInSystem);
-		System.out.println("Average time in system: " + meanInSystem / generalLambda + " (Littles Law)");
-		System.out.println("Average time in system: " + (meanInSystem / 5.0) * 0.5);
+		for (QS queue : queues) {
+			nbrInSystem += queue.accumulated / queue.nbrMeasurements;
+			timeInSystem += (queue.meanTime / queue.nbrReady) / 5;
+			System.out.println("Mean number of customers in " + queue.getName() + ": "
+					+ queue.accumulated / queue.nbrMeasurements);
+		}
+
+		System.out.println("Mean number of customers in the system: " + nbrInSystem);
+
+		System.out.println("Lambda: " + nbrInSystem / timeInSystem);
 
 	}
 }
